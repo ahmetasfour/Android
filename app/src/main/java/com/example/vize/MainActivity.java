@@ -40,6 +40,8 @@ public class MainActivity extends AppCompatActivity {
                 if (!isValidPassword(password)) {
                     editTextPassword.setError("Invalid password: Password must be at least 6 characters long and contain at least one uppercase letter, one lowercase letter, and one digit");
                     editTextPassword.requestFocus();
+
+
                     return;
                 }
 
