@@ -19,7 +19,7 @@ public class MainActivity extends AppCompatActivity {
 
     private EditText editTextEmail;
     private EditText editTextPassword;
-    private Button signInButton;
+    private Button signUpButton;
     private FirebaseAuth mAuth;
 
     @Override
@@ -32,9 +32,9 @@ public class MainActivity extends AppCompatActivity {
 
         editTextEmail = findViewById(R.id.editTextEmail);
         editTextPassword = findViewById(R.id.editTextPassword);
-        signInButton = findViewById(R.id.buttonSignIn);
+        signUpButton = findViewById(R.id.buttonSignUp);
 
-        signInButton.setOnClickListener(new View.OnClickListener() {
+        signUpButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String email = editTextEmail.getText().toString().trim();
@@ -50,19 +50,19 @@ public class MainActivity extends AppCompatActivity {
                     return;
                 }
 
-                // Firebase sign-in
-                mAuth.signInWithEmailAndPassword(email, password)
+                // Firebase sign-up
+                mAuth.createUserWithEmailAndPassword(email, password)
                         .addOnCompleteListener(MainActivity.this, new OnCompleteListener<AuthResult>() {
                             @Override
                             public void onComplete(@NonNull Task<AuthResult> task) {
                                 if (task.isSuccessful()) {
-                                    // Sign in success, update UI with the signed-in user's information
+                                    // Sign up success, go to the welcome activity
                                     FirebaseUser user = mAuth.getCurrentUser();
                                     Intent intent = new Intent(MainActivity.this, HelloActivity.class);
                                     startActivity(intent);
                                 } else {
-                                    // If sign in fails, display a message to the user.
-                                    Toast.makeText(MainActivity.this, "Authentication failed.",
+                                    // If sign up fails, display a message to the user.
+                                    Toast.makeText(MainActivity.this, "Sign up failed.",
                                             Toast.LENGTH_SHORT).show();
                                 }
                             }
