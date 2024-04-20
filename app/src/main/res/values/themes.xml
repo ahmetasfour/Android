@@ -2,8 +2,13 @@
     <!-- Base application theme. -->
     <style name="Base.Theme.Vize" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your light theme here. -->
-        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+        <item name="colorPrimary">@color/app</item>
     </style>
-
+        <style name="Theme.AppCompat.Light.NoActionBar.FullScreen" parent="Theme.AppCompat.Light.NoActionBar">
+            <item name="android:windowFullscreen">true</item>
+            <item name="android:windowContentOverlay">@null</item>
+            <item name="android:windowActionBar">false</item>
+            <item name="android:windowNoTitle">true</item>
+        </style>
     <style name="Theme.Vize" parent="Base.Theme.Vize" />
 </resources>

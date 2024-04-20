@@ -1,5 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="black">#FF000000</color>
+    <color name="app">#B1421C</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="splash">#002130</color>
+    <color name="ssplash">#feeacc</color>
+    <color name="prsplash">#fd8b49</color>
+
+
 </resources>
