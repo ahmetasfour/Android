@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity"
+    android:padding="16dp">
+
+
+    <TextView
+        android:id="@+id/timerTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="48sp"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentTop="true"
+        android:text="00:00:00"
+        android:layout_marginTop="20dp" />
+
+
+    <LinearLayout
+        android:id="@+id/buttonLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/timerTextView"
+        android:layout_marginTop="20dp">
+
+        <Button
+            android:id="@+id/startButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Start"
+            android:layout_marginEnd="10dp"
+            android:onClick="startChronometer" />
+
+        <Button
+            android:id="@+id/pauseButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Pause"
+            android:layout_marginEnd="10dp"
+            android:onClick="pauseChronometer" />
+
+        <Button
+            android:id="@+id/resetButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Reset"
+            android:onClick="resetChronometer" />
+    </LinearLayout>
+
+
+    <com.google.android.gms.maps.MapView
+        android:id="@+id/mapView"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:layout_below="@id/buttonLayout"
+        android:layout_marginTop="20dp" />
+
+</RelativeLayout>
