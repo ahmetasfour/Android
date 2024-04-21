@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/splash"
     android:columnCount="2"
     android:orientation="horizontal"
+    android:id="@+id/home"
     android:padding="16dp"
     android:rowCount="2"
     tools:context=".MainActivity">

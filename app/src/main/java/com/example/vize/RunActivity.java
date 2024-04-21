@@ -1,22 +1,27 @@
 package com.example.vize;
 
-import android.Manifest;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.os.SystemClock;
+import android.view.View;
+import android.widget.Chronometer;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import android.content.pm.PackageManager;  // Make sure this line is added
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 
+
 public class RunActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     private MapView mapView;
     private GoogleMap gMap;
-    private static final int LOCATION_PERMISSION_REQUEST_CODE = 101;
+    private Chronometer chronometer;
+    private long pauseOffset;
+    private boolean running;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,6 +31,31 @@ public class RunActivity extends AppCompatActivity implements OnMapReadyCallback
         mapView = findViewById(R.id.mapView);
         mapView.onCreate(savedInstanceState);
         mapView.getMapAsync(this);
+
+        chronometer = findViewById(R.id.chronometer);
+    }
+
+    public void startChronometer(View view) {
+        if (!running) {
+            chronometer.setBase(SystemClock.elapsedRealtime() - pauseOffset);
+            chronometer.start();
+            running = true;
+        }
+    }
+
+    public void pauseChronometer(View view) {
+        if (running) {
+            chronometer.stop();
+            pauseOffset = SystemClock.elapsedRealtime() - chronometer.getBase();
+            running = false;
+        }
+    }
+
+    public void resetChronometer(View view) {
+        chronometer.stop();
+        chronometer.setBase(SystemClock.elapsedRealtime());
+        pauseOffset = 0;
+        running = false;
     }
 
     @Override
@@ -35,24 +65,14 @@ public class RunActivity extends AppCompatActivity implements OnMapReadyCallback
     }
 
     private void setupMap() {
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this,
-                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                    LOCATION_PERMISSION_REQUEST_CODE);
+        if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.ACCESS_FINE_LOCATION}, 101);
         } else {
             gMap.setMyLocationEnabled(true);
             gMap.getUiSettings().setMyLocationButtonEnabled(true);
         }
     }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == LOCATION_PERMISSION_REQUEST_CODE && grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            setupMap();
-        }
-    }
 
     @Override
     protected void onResume() {
