@@ -3,30 +3,28 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity"
+    tools:context=".RunActivity"
     android:padding="16dp">
 
-
-    <TextView
-        android:id="@+id/timerTextView"
+    <!-- Chronometer to display the timer -->
+    <Chronometer
+        android:id="@+id/chronometer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="48sp"
         android:textStyle="bold"
         android:gravity="center"
         android:layout_centerHorizontal="true"
-        android:layout_alignParentTop="true"
-        android:text="00:00:00"
         android:layout_marginTop="20dp" />
 
-
+    <!-- Button Layout for Start, Pause, and Reset -->
     <LinearLayout
         android:id="@+id/buttonLayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:layout_centerHorizontal="true"
-        android:layout_below="@id/timerTextView"
+        android:layout_below="@id/chronometer"
         android:layout_marginTop="20dp">
 
         <Button
@@ -34,7 +32,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Start"
-            android:layout_marginEnd="10dp"
             android:onClick="startChronometer" />
 
         <Button
@@ -42,7 +39,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Pause"
-            android:layout_marginEnd="10dp"
+            android:layout_marginStart="10dp"
             android:onClick="pauseChronometer" />
 
         <Button
@@ -50,11 +47,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Reset"
+            android:layout_marginStart="10dp"
             android:onClick="resetChronometer" />
     </LinearLayout>
 
-
-
+    <!-- MapView for displaying the map -->
     <com.google.android.gms.maps.MapView
         android:id="@+id/mapView"
         android:layout_width="match_parent"
