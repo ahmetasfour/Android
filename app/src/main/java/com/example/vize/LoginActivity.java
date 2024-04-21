@@ -54,7 +54,7 @@ public class LoginActivity extends AppCompatActivity {
                             public void onComplete(@NonNull Task<AuthResult> task) {
                                 if (task.isSuccessful()) {
                                     // Login success
-                                    Intent intent = new Intent(LoginActivity.this, MainActivity.class); // Adjust if needed
+                                    Intent intent = new Intent(LoginActivity.this, HomeActivity.class); // Adjust if needed
                                     startActivity(intent);
                                     finish();
                                 } else {

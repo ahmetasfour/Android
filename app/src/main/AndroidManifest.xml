@@ -2,7 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -11,35 +13,25 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.Vize"
-        tools:targetApi="31">
+        android:theme="@style/Theme.Vize">
+
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyAQ3I21JOwxLFQOIcZ-rVafBPLw-By5Cqk"/>
-        <activity
-            android:name=".run"
-            android:exported="false" />
-        <activity
-            android:name=".home"
-            android:exported="false" />
-        <activity
-            android:name=".LoginActivity"
-            android:exported="false" />
+            android:value="YOUR_API_KEY"/>
+
         <activity
             android:name=".SplashScreenActivity"
             android:exported="true">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
-        </activity> <!-- MainActivity as a normal activity without launcher intent -->
-        <activity
-            android:name=".MainActivity"
-            android:exported="true" /> <!-- HelloActivity as a normal activity without launcher intent -->
-        <activity
-            android:name=".HelloActivity"
-            android:exported="true" />
+        </activity>
+
+        <activity android:name=".MainActivity" android:exported="true" />
+        <activity android:name=".LoginActivity" android:exported="false" />
+        <activity android:name=".HomeActivity" android:exported="false" />
+        <activity android:name=".RunActivity" android:exported="false" />
     </application>
 
 </manifest>
