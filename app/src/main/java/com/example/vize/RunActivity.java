@@ -21,7 +21,9 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.firebase.firestore.DocumentSnapshot;
 
+import java.text.BreakIterator;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -39,7 +41,7 @@ public class RunActivity extends AppCompatActivity implements OnMapReadyCallback
     private TextView distanceTextView;
 
     private FirestoreService firestoreService;
-
+    private TextView dailyRunsText;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,12 +50,14 @@ public class RunActivity extends AppCompatActivity implements OnMapReadyCallback
         mapView = findViewById(R.id.mapView);
         mapView.onCreate(savedInstanceState);
         mapView.getMapAsync(this);
+        dailyRunsText = findViewById(R.id.daily_runs_text);
 
         chronometer = findViewById(R.id.chronometer);
         distanceTextView = findViewById(R.id.distanceTextView);
 
         firestoreService = new FirestoreService();
         locationClient = LocationServices.getFusedLocationProviderClient(this);
+        updateDailyRunsDisplay();
     }
 
     public void startChronometer(View view) {
@@ -89,11 +93,14 @@ public class RunActivity extends AppCompatActivity implements OnMapReadyCallback
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
         String date = dateFormat.format(new Date());
         firestoreService.addDailyRun(date, totalDistance, task -> {
-            if (!task.isSuccessful()) {
+            if (task.isSuccessful()) {
+                updateDailyRunsDisplay();
+            } else {
                 // Log or handle the error
             }
         });
     }
+
 
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
@@ -141,6 +148,29 @@ public class RunActivity extends AppCompatActivity implements OnMapReadyCallback
         locationClient.removeLocationUpdates(locationCallback);
     }
 
+    private void updateDailyRunsDisplay() {
+        firestoreService.fetchDailyRuns(task -> {
+
+            if (task.isSuccessful()) {
+                StringBuilder builder = new StringBuilder();
+                for (DocumentSnapshot document : task.getResult().getDocuments()) {
+                    String date = document.getString("date");
+                    Double distance = document.getDouble("distance");
+                    builder.append(String.format(Locale.getDefault(), "%s - %.2f m\n", date, distance));
+                }
+                if (builder.length() == 0) {
+                    dailyRunsText.setText("No runs logged yet.");
+                } else {
+                    dailyRunsText.setText(builder.toString());
+                }
+            } else {
+                dailyRunsText.setText("Failed to load runs.");
+            }
+        });
+    }
+
+
+
     @Override
     protected void onResume() {
         super.onResume();
@@ -148,7 +178,9 @@ public class RunActivity extends AppCompatActivity implements OnMapReadyCallback
         if (running) {
             startLocationUpdates();
         }
+        updateDailyRunsDisplay();
     }
+
 
     @Override
     protected void onPause() {
