@@ -51,12 +51,23 @@
             android:onClick="resetChronometer" />
     </LinearLayout>
 
-    <!-- MapView for displaying the map -->
+
+    <TextView
+        android:id="@+id/distanceTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Distance: 0m"
+        android:textSize="24sp"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@id/buttonLayout"
+        android:layout_marginTop="10dp"/>
+
+
     <com.google.android.gms.maps.MapView
         android:id="@+id/mapView"
         android:layout_width="match_parent"
         android:layout_height="300dp"
-        android:layout_below="@id/buttonLayout"
+        android:layout_below="@id/distanceTextView"
         android:layout_marginTop="20dp" />
 
 </RelativeLayout>

@@ -42,6 +42,7 @@ dependencies {
     implementation("com.google.firebase:firebase-analytics")
     implementation("androidx.activity:activity:1.8.0")
     implementation("com.google.android.gms:play-services-maps:18.0.2")
+    implementation("com.google.android.gms:play-services-location:18.0.0")
 
 
     testImplementation("junit:junit:4.13.2")
