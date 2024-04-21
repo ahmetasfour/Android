@@ -70,4 +70,13 @@
         android:layout_below="@id/distanceTextView"
         android:layout_marginTop="20dp" />
 
+    <TextView
+        android:id="@+id/daily_runs_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/mapView"
+        android:padding="16dp"
+        android:textSize="16sp"/>
+
+
 </RelativeLayout>

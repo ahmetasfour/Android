@@ -8,7 +8,6 @@ import android.os.SystemClock;
 import android.view.View;
 import android.widget.Chronometer;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -22,6 +21,11 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 public class RunActivity extends AppCompatActivity implements OnMapReadyCallback {
 
@@ -35,6 +39,8 @@ public class RunActivity extends AppCompatActivity implements OnMapReadyCallback
     private float totalDistance = 0;
     private TextView distanceTextView;
 
+    private FirestoreService firestoreService;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,8 +51,10 @@ public class RunActivity extends AppCompatActivity implements OnMapReadyCallback
         mapView.getMapAsync(this);
 
         chronometer = findViewById(R.id.chronometer);
-        locationClient = LocationServices.getFusedLocationProviderClient(this);
         distanceTextView = findViewById(R.id.distanceTextView);
+
+        firestoreService = new FirestoreService();
+        locationClient = LocationServices.getFusedLocationProviderClient(this);
     }
 
     public void startChronometer(View view) {
@@ -71,9 +79,21 @@ public class RunActivity extends AppCompatActivity implements OnMapReadyCallback
         chronometer.stop();
         chronometer.setBase(SystemClock.elapsedRealtime());
         pauseOffset = 0;
-        totalDistance = 0; // Reset the distance
-        lastLocation = null; // Reset the last location
+        totalDistance = 0;
+        updateDistanceDisplay();
+        lastLocation = null;
         running = false;
+    }
+
+    private void updateDistanceDisplay() {
+        distanceTextView.setText(String.format(Locale.getDefault(), "Distance: %.2f m", totalDistance));
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+        String date = dateFormat.format(new Date());
+        firestoreService.addDailyRun(date, totalDistance, task -> {
+            if (!task.isSuccessful()) {
+                // Log or handle the error
+            }
+        });
     }
 
     @Override
@@ -108,8 +128,9 @@ public class RunActivity extends AppCompatActivity implements OnMapReadyCallback
             if (locationResult != null) {
                 for (Location location : locationResult.getLocations()) {
                     if (lastLocation != null) {
-                        totalDistance += lastLocation.distanceTo(location);
-                        distanceTextView.setText(String.format("Distance: %.2f m", totalDistance));
+                        float distance = lastLocation.distanceTo(location);
+                        totalDistance += distance;
+                        updateDistanceDisplay();
                     }
                     lastLocation = location;
                 }
