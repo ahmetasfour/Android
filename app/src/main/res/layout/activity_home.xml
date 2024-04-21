@@ -39,7 +39,7 @@
             android:shadowDx="1"
             android:shadowDy="1"
             android:shadowRadius="48"
-            android:text="Cardio Training"
+            android:text="cardio training"
             android:textColor="@color/white"
             android:textSize="22sp"
             android:textStyle="normal|bold|italic" />
@@ -74,7 +74,7 @@
             android:shadowDx="1"
             android:shadowDy="1"
             android:shadowRadius="48"
-            android:text="Strength Training"
+            android:text="strength training"
             android:textColor="@color/white"
             android:textSize="22sp"
             android:textStyle="normal|bold|italic" />
@@ -95,7 +95,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:scaleType="centerCrop"
-            android:src="@drawable/flexibility" />
+            android:src="@drawable/flex" />
 
         <TextView
             android:layout_width="match_parent"
@@ -110,7 +110,7 @@
             android:shadowDx="1"
             android:shadowDy="1"
             android:shadowRadius="48"
-            android:text="Flexibility Training"
+            android:text="flexibility training"
             android:textColor="@color/white"
             android:textSize="22sp"
             android:textStyle="normal|bold|italic" />
@@ -145,7 +145,7 @@
             android:shadowDx="1"
             android:shadowDy="1"
             android:shadowRadius="48"
-            android:text="Balance Training"
+            android:text="balance training"
             android:textColor="@color/white"
             android:textSize="22sp"
             android:textStyle="normal|bold|italic" />
