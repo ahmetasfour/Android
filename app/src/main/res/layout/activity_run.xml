@@ -17,7 +17,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="20dp" />
 
-    <!-- Button Layout for Start, Pause, and Reset -->
+    <!-- Layout for Start, Pause, and Reset Buttons -->
     <LinearLayout
         android:id="@+id/buttonLayout"
         android:layout_width="wrap_content"
@@ -51,7 +51,7 @@
             android:onClick="resetChronometer" />
     </LinearLayout>
 
-
+    <!-- TextView for displaying the current distance -->
     <TextView
         android:id="@+id/distanceTextView"
         android:layout_width="wrap_content"
@@ -62,7 +62,7 @@
         android:layout_below="@id/buttonLayout"
         android:layout_marginTop="10dp"/>
 
-
+    <!-- MapView to display the route -->
     <com.google.android.gms.maps.MapView
         android:id="@+id/mapView"
         android:layout_width="match_parent"
@@ -70,23 +70,38 @@
         android:layout_below="@id/distanceTextView"
         android:layout_marginTop="20dp" />
 
-    <ScrollView
-        android:layout_width="match_parent"
+    <!-- Styled TextViews to display distances for past three days -->
+    <TextView
+        android:id="@+id/day1Distance"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/mapView"
-        android:layout_marginTop="8dp">
+        android:layout_marginTop="20dp"
+        android:textSize="18sp"
+        android:background="@drawable/rounded_box"
+        android:padding="10dp"
+        android:textColor="#000000"/>
 
-        <TextView
-            android:id="@+id/daily_runs_text"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:padding="16dp"
-            android:textSize="16sp"
-            android:background="#FFF3F3F3"
-         android:textColor="#FF000000"
-        android:text="Loading..." />
-    </ScrollView>
+    <TextView
+        android:id="@+id/day2Distance"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/day1Distance"
+        android:layout_marginTop="20dp"
+        android:textSize="18sp"
+        android:background="@drawable/rounded_box"
+        android:padding="10dp"
+        android:textColor="#000000"/>
 
-
+    <TextView
+        android:id="@+id/day3Distance"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/day2Distance"
+        android:layout_marginTop="20dp"
+        android:textSize="18sp"
+        android:background="@drawable/rounded_box"
+        android:padding="10dp"
+        android:textColor="#000000"/>
 
 </RelativeLayout>

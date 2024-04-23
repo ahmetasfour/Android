@@ -1,32 +1,37 @@
 package com.example.vize;
 
-import android.Manifest;
-import android.content.pm.PackageManager;
-import android.location.Location;
-import android.os.Bundle;
-import android.os.SystemClock;
-import android.view.View;
-import android.widget.Chronometer;
-import android.widget.TextView;
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
+        import android.Manifest;
+        import android.content.pm.PackageManager;
+        import android.location.Location;
+        import android.os.Bundle;
+        import android.os.SystemClock;
+        import android.util.Log;
+        import android.view.View;
+        import android.widget.Chronometer;
+        import android.widget.TextView;
+        import androidx.annotation.NonNull;
+        import androidx.appcompat.app.AppCompatActivity;
+        import androidx.core.app.ActivityCompat;
+        import androidx.core.content.ContextCompat;
 
-import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationCallback;
-import com.google.android.gms.location.LocationRequest;
-import com.google.android.gms.location.LocationResult;
-import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapView;
-import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.firebase.firestore.DocumentSnapshot;
+        import com.google.android.gms.location.FusedLocationProviderClient;
+        import com.google.android.gms.location.LocationCallback;
+        import com.google.android.gms.location.LocationRequest;
+        import com.google.android.gms.location.LocationResult;
+        import com.google.android.gms.location.LocationServices;
+        import com.google.android.gms.maps.GoogleMap;
+        import com.google.android.gms.maps.MapView;
+        import com.google.android.gms.maps.OnMapReadyCallback;
+        import com.google.firebase.firestore.DocumentSnapshot;
 
-import java.text.BreakIterator;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Locale;
+        import java.text.SimpleDateFormat;
+        import java.util.ArrayList;
+        import java.util.Calendar;
+        import java.util.Collections;
+        import java.util.Date;
+        import java.util.HashMap;
+        import java.util.List;
+        import java.util.Locale;
 
 public class RunActivity extends AppCompatActivity implements OnMapReadyCallback {
 
@@ -38,10 +43,8 @@ public class RunActivity extends AppCompatActivity implements OnMapReadyCallback
     private FusedLocationProviderClient locationClient;
     private Location lastLocation;
     private float totalDistance = 0;
-    private TextView distanceTextView;
-
+    private TextView distanceTextView, day1Distance, day2Distance, day3Distance;
     private FirestoreService firestoreService;
-    private TextView dailyRunsText;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,11 +53,12 @@ public class RunActivity extends AppCompatActivity implements OnMapReadyCallback
         mapView = findViewById(R.id.mapView);
         mapView.onCreate(savedInstanceState);
         mapView.getMapAsync(this);
-        dailyRunsText = findViewById(R.id.daily_runs_text);
 
         chronometer = findViewById(R.id.chronometer);
         distanceTextView = findViewById(R.id.distanceTextView);
-
+        day1Distance = findViewById(R.id.day1Distance);
+        day2Distance = findViewById(R.id.day2Distance);
+        day3Distance = findViewById(R.id.day3Distance);
         firestoreService = new FirestoreService();
         locationClient = LocationServices.getFusedLocationProviderClient(this);
         updateDailyRunsDisplay();
@@ -90,17 +94,7 @@ public class RunActivity extends AppCompatActivity implements OnMapReadyCallback
 
     private void updateDistanceDisplay() {
         distanceTextView.setText(String.format(Locale.getDefault(), "Distance: %.2f m", totalDistance));
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
-        String date = dateFormat.format(new Date());
-        firestoreService.addDailyRun(date, totalDistance, task -> {
-            if (task.isSuccessful()) {
-                updateDailyRunsDisplay();
-            } else {
-                // Log or handle the error
-            }
-        });
     }
-
 
     @Override
     public void onMapReady(@NonNull GoogleMap googleMap) {
@@ -150,25 +144,46 @@ public class RunActivity extends AppCompatActivity implements OnMapReadyCallback
 
     private void updateDailyRunsDisplay() {
         firestoreService.fetchDailyRuns(task -> {
-
-            if (task.isSuccessful()) {
-                StringBuilder builder = new StringBuilder();
-                for (DocumentSnapshot document : task.getResult().getDocuments()) {
-                    String date = document.getString("date");
-                    Double distance = document.getDouble("distance");
-                    builder.append(String.format(Locale.getDefault(), "%s - %.2f m\n", date, distance));
+            if (task.isSuccessful() && task.getResult() != null) {
+                List<DocumentSnapshot> documents = task.getResult().getDocuments();
+                for (DocumentSnapshot document : documents) {
+                    Log.d("Firestore Data", "Date: " + document.getString("date") + " Distance: " + document.getDouble("distance"));
                 }
-                if (builder.length() == 0) {
-                    dailyRunsText.setText("No runs logged yet.");
-                } else {
-                    dailyRunsText.setText(builder.toString());
-                }
+                updateUIWithDistances(documents);
             } else {
-                dailyRunsText.setText("Failed to load runs.");
+                Log.e("RunActivity", "Error getting documents: ", task.getException());
             }
         });
     }
 
+    private void updateUIWithDistances(List<DocumentSnapshot> documents) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd", Locale.getDefault());
+        Calendar calendar = Calendar.getInstance();
+        String today = dateFormat.format(new Date());
+        HashMap<String, Float> lastThreeDays = new HashMap<>();
+
+        // Initialize last three days with 0 distance
+        for (int i = 0; i < 3; i++) {
+            calendar.add(Calendar.DATE, -i);
+            lastThreeDays.put(dateFormat.format(calendar.getTime()), 0f);
+        }
+
+        // Calculate distances for the last three days
+        for (DocumentSnapshot document : documents) {
+            String date = document.getString("date");
+            Float distance = document.getDouble("distance").floatValue();
+            if (lastThreeDays.containsKey(date)) {
+                lastThreeDays.put(date, lastThreeDays.get(date) + distance);
+            }
+        }
+
+        List<String> dates = new ArrayList<>(lastThreeDays.keySet());
+        Collections.sort(dates, Collections.reverseOrder());
+
+        day1Distance.setText(dates.get(0) + " - " + String.format(Locale.getDefault(), "%.2f m", lastThreeDays.get(dates.get(0))));
+        day2Distance.setText(dates.get(1) + " - " + String.format(Locale.getDefault(), "%.2f m", lastThreeDays.get(dates.get(1))));
+        day3Distance.setText(dates.get(2) + " - " + String.format(Locale.getDefault(), "%.2f m", lastThreeDays.get(dates.get(2))));
+    }
 
 
     @Override
