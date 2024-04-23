@@ -5,6 +5,7 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
 import android.os.SystemClock;
+import android.util.Log;
 import android.view.View;
 import android.widget.Chronometer;
 import android.widget.TextView;
@@ -150,21 +151,21 @@ public class RunActivity extends AppCompatActivity implements OnMapReadyCallback
 
     private void updateDailyRunsDisplay() {
         firestoreService.fetchDailyRuns(task -> {
-
             if (task.isSuccessful()) {
                 StringBuilder builder = new StringBuilder();
-                for (DocumentSnapshot document : task.getResult().getDocuments()) {
-                    String date = document.getString("date");
-                    Double distance = document.getDouble("distance");
-                    builder.append(String.format(Locale.getDefault(), "%s - %.2f m\n", date, distance));
-                }
-                if (builder.length() == 0) {
-                    dailyRunsText.setText("No runs logged yet.");
-                } else {
+                if (task.getResult() != null && !task.getResult().isEmpty()) {
+                    for (DocumentSnapshot document : task.getResult().getDocuments()) {
+                        String date = document.getString("date");
+                        Double distance = document.getDouble("distance");
+                        builder.append(String.format(Locale.getDefault(), "%s - %.2f m\n", date, distance));
+                    }
                     dailyRunsText.setText(builder.toString());
+                } else {
+                    dailyRunsText.setText("No runs logged yet.");
                 }
             } else {
                 dailyRunsText.setText("Failed to load runs.");
+                Log.e("RunActivity", "Error getting documents: ", task.getException());
             }
         });
     }
