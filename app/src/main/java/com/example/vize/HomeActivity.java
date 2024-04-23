@@ -20,5 +20,12 @@ public class HomeActivity extends AppCompatActivity {
         Intent intent = new Intent(this, RunActivity.class);
         startActivity(intent);
     }
+
+        public void navigateToTutorial(View view) {
+            // Create an Intent to start TutorialActivity
+            Intent intent = new Intent(this, TutorialActivity.class);
+            startActivity(intent);
+        }
+
 }
 

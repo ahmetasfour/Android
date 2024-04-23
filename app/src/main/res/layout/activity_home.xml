@@ -12,6 +12,8 @@
     android:rowCount="2"
     tools:context=".MainActivity">
 
+
+
     <!-- Cardio Training Section -->
     <FrameLayout
         android:layout_width="0dp"
@@ -152,5 +154,19 @@
             android:textSize="22sp"
             android:textStyle="normal|bold|italic" />
     </FrameLayout>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_robot_tutorial"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_row="0"
+        android:layout_column="0"
+        android:layout_gravity="top|left"
+        android:onClick="navigateToTutorial"
+        android:layout_marginTop="16dp"
+        android:src="@drawable/vt"
+        app:backgroundTint="@color/ssplash"
+        app:elevation="1dp" />
+
 
 </GridLayout>
