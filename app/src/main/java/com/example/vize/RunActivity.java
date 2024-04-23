@@ -143,10 +143,12 @@ public class RunActivity extends AppCompatActivity implements OnMapReadyCallback
     }
 
     private void updateDailyRunsDisplay() {
-        // Assume firestoreService is a properly initialized FirestoreService object
         firestoreService.fetchDailyRuns(task -> {
             if (task.isSuccessful() && task.getResult() != null) {
                 List<DocumentSnapshot> documents = task.getResult().getDocuments();
+                for (DocumentSnapshot document : documents) {
+                    Log.d("Firestore Data", "Date: " + document.getString("date") + " Distance: " + document.getDouble("distance"));
+                }
                 updateUIWithDistances(documents);
             } else {
                 Log.e("RunActivity", "Error getting documents: ", task.getException());
