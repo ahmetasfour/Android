@@ -58,8 +58,9 @@ public class PushActivity extends AppCompatActivity implements SensorEventListen
     }
 
     public void startTracking() {
-        mainLayout.setVisibility(View.INVISIBLE); // Hide the main layout
         countdownText.setVisibility(View.VISIBLE); // Show the countdown text
+        pushUpCount.setVisibility(View.GONE); // Hide the push-up count text
+        calibrationText.setVisibility(View.GONE); // Hide the calibration text
 
         new CountDownTimer(3000, 1000) {
             public void onTick(long millisUntilFinished) {
@@ -70,13 +71,15 @@ public class PushActivity extends AppCompatActivity implements SensorEventListen
             public void onFinish() {
                 Log.d("CountDown", "Countdown finished");
                 countdownText.setVisibility(View.GONE); // Hide the countdown text
-                mainLayout.setVisibility(View.VISIBLE); // Show the main layout again
+                pushUpCount.setVisibility(View.VISIBLE); // Show the push-up count text
+                calibrationText.setVisibility(View.VISIBLE); // Show the calibration text
                 pushUpCount.setText("Push-up Count: 0"); // Reset the push-up count display
                 isTracking = true;
                 sensorManager.registerListener(PushActivity.this, proximitySensor, SensorManager.SENSOR_DELAY_NORMAL);
             }
         }.start();
     }
+
 
 
 
