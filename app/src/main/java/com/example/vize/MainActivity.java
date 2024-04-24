@@ -21,6 +21,7 @@ import java.util.Calendar;
 public class MainActivity extends AppCompatActivity {
 
     private EditText editTextEmail;
+    private int userAge = -1;
     private EditText editTextPassword;
     private Button signUpButton;
     private TextView signInTextView; // TextView for navigating to the login page
@@ -68,7 +69,13 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
 
-        // Firebase sign-up
+        if (userAge == -1) {
+            Toast.makeText(MainActivity.this, "Please select your birthdate", Toast.LENGTH_LONG).show();
+            return;
+        }
+
+
+
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(MainActivity.this, new OnCompleteListener<AuthResult>() {
                     @Override
@@ -88,7 +95,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void goToLoginActivity() {
-        Intent intent = new Intent(MainActivity.this, HomeActivity.class);
+        Intent intent = new Intent(MainActivity.this, LoginActivity.class);
         startActivity(intent);
     }
 
@@ -103,18 +110,19 @@ public class MainActivity extends AppCompatActivity {
     public void showDatePickerDialog(View v) {
         DatePickerDialog datePickerDialog = new DatePickerDialog(this,
                 (view, year, month, dayOfMonth) -> {
-                    // Calculate age based on selected date
                     Calendar dob = Calendar.getInstance();
                     dob.set(year, month, dayOfMonth);
                     Calendar today = Calendar.getInstance();
-                    int age = today.get(Calendar.YEAR) - dob.get(Calendar.YEAR);
+                    userAge = today.get(Calendar.YEAR) - dob.get(Calendar.YEAR);
                     if (today.get(Calendar.DAY_OF_YEAR) < dob.get(Calendar.DAY_OF_YEAR)) {
-                        age--;
+                        userAge--;  // Adjust age if birthday hasn't occurred yet this year
                     }
-
-                    // Display the age
-                    Toast.makeText(getApplicationContext(), "Age: " + age, Toast.LENGTH_SHORT).show();
-                }, 2000, 0, 1); // Default date (e.g., 1st Jan 2000)
+                    // Optional: Update a TextView to display selected age
+                    TextView ageDisplay = findViewById(R.id.textViewAge);
+                    ageDisplay.setText("Age: " + userAge);
+                }, 2000, 0, 1); // Default date can be adjusted as needed
         datePickerDialog.show();
     }
+
+
 }

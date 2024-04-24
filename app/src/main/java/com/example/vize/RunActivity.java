@@ -3,6 +3,7 @@ package com.example.vize;
 import static android.content.ContentValues.TAG;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -74,7 +75,7 @@ public class RunActivity extends AppCompatActivity implements OnMapReadyCallback
         mapView.onCreate(savedInstanceState);
         mapView.getMapAsync(this);
 
-        firestoreService = new FirestoreService();
+
         locationClient = LocationServices.getFusedLocationProviderClient(this);
 
         updateDailyRunsDisplay();
@@ -112,6 +113,14 @@ public class RunActivity extends AppCompatActivity implements OnMapReadyCallback
         }
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent intent = new Intent(this, HomeActivity.class);
+        startActivity(intent);
+        finish();
+    }
+
     public void resetChronometer(View view) {
         chronometer.stop();
         chronometer.setBase(SystemClock.elapsedRealtime());
@@ -124,8 +133,8 @@ public class RunActivity extends AppCompatActivity implements OnMapReadyCallback
 
     private void startLocationUpdates() {
         LocationRequest locationRequest = LocationRequest.create();
-        locationRequest.setInterval(2000);
-        locationRequest.setFastestInterval(1000);
+        locationRequest.setInterval(7000);
+        locationRequest.setFastestInterval(5000);
         locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
         locationRequest.setSmallestDisplacement(5);
 

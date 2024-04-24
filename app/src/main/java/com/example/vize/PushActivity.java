@@ -135,6 +135,8 @@ public class PushActivity extends AppCompatActivity implements SensorEventListen
         }
     }
 
+
+
     private void processProximityData(float proximityValue) {
         if (!isCalibrated) {
             calibrationDistance = proximityValue;
@@ -204,6 +206,14 @@ public class PushActivity extends AppCompatActivity implements SensorEventListen
         Intent intent = new Intent(this, HistoryActivity.class);
         startActivity(intent);
     }
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        Intent intent = new Intent(this, HomeActivity.class);
+        startActivity(intent);
+        finish();
+    }
+
 
     public void completeTraining(View view) {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
