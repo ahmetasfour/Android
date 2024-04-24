@@ -9,12 +9,14 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.content.Intent;
-
+import android.app.DatePickerDialog;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import java.util.Calendar;
+
 
 public class MainActivity extends AppCompatActivity {
 
@@ -97,5 +99,22 @@ public class MainActivity extends AppCompatActivity {
     private boolean isValidPassword(String password) {
         String passwordRegex = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#&()–[{}]:;',?/*~$^+=<>]).{8,}$";
         return password.matches(passwordRegex);
+    }
+    public void showDatePickerDialog(View v) {
+        DatePickerDialog datePickerDialog = new DatePickerDialog(this,
+                (view, year, month, dayOfMonth) -> {
+                    // Calculate age based on selected date
+                    Calendar dob = Calendar.getInstance();
+                    dob.set(year, month, dayOfMonth);
+                    Calendar today = Calendar.getInstance();
+                    int age = today.get(Calendar.YEAR) - dob.get(Calendar.YEAR);
+                    if (today.get(Calendar.DAY_OF_YEAR) < dob.get(Calendar.DAY_OF_YEAR)) {
+                        age--;
+                    }
+
+                    // Display the age
+                    Toast.makeText(getApplicationContext(), "Age: " + age, Toast.LENGTH_SHORT).show();
+                }, 2000, 0, 1); // Default date (e.g., 1st Jan 2000)
+        datePickerDialog.show();
     }
 }
