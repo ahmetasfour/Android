@@ -220,9 +220,9 @@ protected void onCreate(Bundle savedInstanceState) {
             if (locationResult != null) {
                 for (Location location : locationResult.getLocations()) {
                     Log.d("Location Update", "Location: " + location.getLatitude() + ", " + location.getLongitude() + " Accuracy: " + location.getAccuracy());
-                    if (lastLocation != null && location.getAccuracy() < 20) { // Check if accuracy is within an acceptable range
+                    if (lastLocation != null && location.getAccuracy() < 20) {
                         float distance = lastLocation.distanceTo(location);
-                        if (distance > 5) { // Further filter by a realistic minimum movement threshold
+                        if (distance > 5) {
                             totalDistance += distance;
                             updateDistanceDisplay();
                         }
