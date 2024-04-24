@@ -1,13 +1,18 @@
 package com.example.vize;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.webkit.WebView;
+import android.widget.FrameLayout;
+import android.widget.MediaController;
 import android.widget.VideoView;
 import android.net.Uri;
 import android.media.MediaPlayer;
 import androidx.appcompat.app.AppCompatActivity;
-
+import android.webkit.WebSettings;
+import android.webkit.WebView;
 public class HomeActivity extends AppCompatActivity {
 
     private VideoView videoView;
@@ -17,8 +22,7 @@ public class HomeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
 
-        // Initialize the VideoView here to avoid finding it every time in playVideo
-        VideoView videoView = findViewById(R.id.videoView);
+
     }
 
     // Method to navigate to RunActivity
@@ -32,29 +36,32 @@ public class HomeActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+
     public void playVideo(View view) {
-        // Set the path of the video you want to play
-        String videoPath = "android.resource://" + getPackageName() + "/" + R.raw.pushup;
-        Uri uri = Uri.parse(videoPath);
-        videoView.setVideoURI(uri);
+        FrameLayout videoContainer = findViewById(R.id.videoContainer);
+        videoContainer.setVisibility(View.VISIBLE); // Show the video container
 
-        // Hide the FloatingActionButton when the video starts
-        view.setVisibility(View.INVISIBLE); // Change to INVISIBLE to maintain layout during video playback
+        WebView webView = findViewById(R.id.webView);
+        WebSettings webSettings = webView.getSettings();
+        webSettings.setJavaScriptEnabled(true);
 
-        // Start playing the video
-        videoView.start();
+        String embedUrl = "https://www.youtube.com/embed/yGgpjif4ogo";
+        String iframeHTML = "<html><body style='margin:0;padding:0;'>" +
+                "<iframe width='100%' height='100%' src='" + embedUrl +
+                "' frameborder='0' allowfullscreen></iframe>" +
+                "</body></html>";
 
-        // Handle video completion and errors
-        videoView.setOnCompletionListener(mediaPlayer -> {
-            view.setVisibility(View.VISIBLE); // Show the FloatingActionButton again
-            mediaPlayer.release(); // Release media player
-        });
-
-        videoView.setOnErrorListener((mediaPlayer, what, extra) -> {
-            view.setVisibility(View.VISIBLE); // Show the FloatingActionButton again if error occurs
-            return true; // Error handled
-        });
+        webView.loadData(iframeHTML, "text/html", "utf-8");
     }
+
+    public void closeVideo(View view) {
+        FrameLayout videoContainer = findViewById(R.id.videoContainer);
+        videoContainer.setVisibility(View.GONE);
+    }
+
+
+
+
 
     @Override
     protected void onPause() {
