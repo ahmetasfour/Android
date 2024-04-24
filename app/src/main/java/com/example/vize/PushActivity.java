@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
+import android.os.Vibrator;
 
 public class PushActivity extends AppCompatActivity implements SensorEventListener, View.OnTouchListener {
 
@@ -18,6 +19,7 @@ public class PushActivity extends AppCompatActivity implements SensorEventListen
     private TextView pushUpCount;
     private TextView calibrationText;
     private Button startButton, stopButton;
+    private Vibrator vibrator;
     private int count = 0;
     private boolean isTracking = false;
     private boolean isCalibrated = false;
@@ -33,12 +35,9 @@ public class PushActivity extends AppCompatActivity implements SensorEventListen
         startButton = findViewById(R.id.startButton);
         stopButton = findViewById(R.id.stopButton);
 
-        // Setting the touch listener for the main layout to count touch as push-up
-        View mainLayout = findViewById(R.id.mainLayout);
-        mainLayout.setOnTouchListener(this);
-
         sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
         proximitySensor = sensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY);
+        vibrator = (Vibrator) getSystemService(VIBRATOR_SERVICE);
 
         if (proximitySensor == null) {
             pushUpCount.setText("No Proximity Sensor Found");
@@ -46,6 +45,8 @@ public class PushActivity extends AppCompatActivity implements SensorEventListen
 
         startButton.setOnClickListener(view -> startTracking());
         stopButton.setOnClickListener(view -> stopTracking());
+        View mainLayout = findViewById(R.id.mainLayout);
+        mainLayout.setOnTouchListener(this);
     }
 
     public void startTracking() {
@@ -56,6 +57,13 @@ public class PushActivity extends AppCompatActivity implements SensorEventListen
     public void stopTracking() {
         isTracking = false;
         sensorManager.unregisterListener(this);
+    }
+
+    private void vibrateDevice() {
+        if (vibrator.hasVibrator()) {
+            // Vibrate for 500 milliseconds
+            vibrator.vibrate(500);
+        }
     }
 
     @Override
@@ -79,6 +87,7 @@ public class PushActivity extends AppCompatActivity implements SensorEventListen
             if (proximityValue <= distanceThreshold) {
                 count++;
                 pushUpCount.setText("Push-up Count: " + count);
+                vibrateDevice();
             }
         }
     }
@@ -108,6 +117,7 @@ public class PushActivity extends AppCompatActivity implements SensorEventListen
             if (isTracking) {
                 count++;
                 pushUpCount.setText("Push-up Count: " + count);
+                vibrateDevice();
             }
             return true;
         }
