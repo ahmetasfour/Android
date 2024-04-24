@@ -224,7 +224,7 @@ protected void onCreate(Bundle savedInstanceState) {
             if (locationResult != null) {
                 for (Location location : locationResult.getLocations()) {
                     Log.d("Location Update", "Location: " + location.getLatitude() + ", " + location.getLongitude() + " Accuracy: " + location.getAccuracy());
-                    if (lastLocation != null && location.getAccuracy() < 20) {
+                    if (lastLocation != null && location.getAccuracy() < 5) {
                         float distance = lastLocation.distanceTo(location);
                         if (distance > 5) {
                             totalDistance += distance;
