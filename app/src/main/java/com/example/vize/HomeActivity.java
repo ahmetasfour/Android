@@ -27,6 +27,11 @@ public class HomeActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    public void navigateToStrength(View view) {
+        Intent intent = new Intent(this, PushActivity.class);
+        startActivity(intent);
+    }
+
     public void playVideo(View view) {
         // Set the path of the video you want to play
         String videoPath = "android.resource://" + getPackageName() + "/" + R.raw.pushup;

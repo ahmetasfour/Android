@@ -1,10 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/mainLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".PushActivity">
+    android:gravity="center"
+    android:orientation="vertical">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <TextView
+        android:id="@+id/pushUpCount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Push-up Count: 0"
+        android:textSize="24sp" />
+
+    <TextView
+        android:id="@+id/calibrationText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Calibration: Perform a push-up to set the distance."
+        android:layout_marginTop="15dp"/>
+
+    <Button
+        android:id="@+id/startButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Start Tracking"
+        android:onClick="startTracking" />
+
+    <Button
+        android:id="@+id/stopButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Stop Tracking"
+        android:onClick="stopTracking"/>
+
+</LinearLayout>
