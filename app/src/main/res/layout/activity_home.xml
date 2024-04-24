@@ -47,6 +47,8 @@
         android:layout_rowWeight="1"
         android:layout_columnWeight="1"
         android:layout_gravity="fill"
+        android:background="@drawable/border"
+        android:layout_margin="8dp"
         android:foreground="?attr/selectableItemBackground"
         android:onClick="navigateToCardio">
 
@@ -82,6 +84,8 @@
         android:layout_rowWeight="1"
         android:layout_columnWeight="1"
         android:layout_gravity="fill"
+        android:background="@drawable/border"
+        android:layout_margin="8dp"
         android:foreground="?attr/selectableItemBackground"
         android:onClick="navigateToStrength">
 
@@ -104,7 +108,7 @@
             android:shadowDx="1"
             android:shadowDy="1"
             android:shadowRadius="48"
-            android:text="strength training"
+            android:text="Push Ups"
             android:textColor="@color/white"
             android:textSize="22sp"
             android:textStyle="normal|bold|italic" />
@@ -116,7 +120,7 @@
             android:layout_gravity="top|right"
             android:layout_marginTop="10dp"
             android:layout_marginRight="10dp"
-            android:src="@drawable/push"
+            android:src="@drawable/play"
             android:onClick="playVideo" />
 
 
@@ -136,6 +140,8 @@
         android:layout_rowWeight="1"
         android:layout_columnWeight="1"
         android:layout_gravity="fill"
+        android:background="@drawable/border"
+        android:layout_margin="8dp"
         android:foreground="?attr/selectableItemBackground"
         android:onClick="navigateToFlexibility">
 
@@ -171,6 +177,8 @@
         android:layout_rowWeight="1"
         android:layout_columnWeight="1"
         android:layout_gravity="fill"
+        android:background="@drawable/border"
+        android:layout_margin="8dp"
         android:foreground="?attr/selectableItemBackground"
         android:onClick="navigateToBalance">
 
@@ -198,20 +206,6 @@
             android:textSize="22sp"
             android:textStyle="normal|bold|italic" />
     </FrameLayout>
-
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab_robot_tutorial"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_row="0"
-        android:layout_column="0"
-        android:layout_gravity="top|left"
-        android:onClick="playVideo"
-        android:layout_marginTop="16dp"
-        android:src="@drawable/vt"
-        app:backgroundTint="@color/ssplash"
-        app:elevation="1dp" />
-
 
 
 </GridLayout>
