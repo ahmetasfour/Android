@@ -5,12 +5,14 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
+import android.os.CountDownTimer;
+import android.os.Vibrator;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
-import android.os.Vibrator;
 
 public class PushActivity extends AppCompatActivity implements SensorEventListener, View.OnTouchListener {
 
@@ -19,6 +21,7 @@ public class PushActivity extends AppCompatActivity implements SensorEventListen
     private TextView pushUpCount;
     private TextView calibrationText;
     private Button startButton, stopButton;
+    private LinearLayout mainLayout;
     private Vibrator vibrator;
     private int count = 0;
     private boolean isTracking = false;
@@ -34,6 +37,7 @@ public class PushActivity extends AppCompatActivity implements SensorEventListen
         calibrationText = findViewById(R.id.calibrationText);
         startButton = findViewById(R.id.startButton);
         stopButton = findViewById(R.id.stopButton);
+        mainLayout = findViewById(R.id.mainLayout);
 
         sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
         proximitySensor = sensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY);
@@ -45,13 +49,23 @@ public class PushActivity extends AppCompatActivity implements SensorEventListen
 
         startButton.setOnClickListener(view -> startTracking());
         stopButton.setOnClickListener(view -> stopTracking());
-        View mainLayout = findViewById(R.id.mainLayout);
         mainLayout.setOnTouchListener(this);
     }
 
     public void startTracking() {
-        isTracking = true;
-        sensorManager.registerListener(this, proximitySensor, SensorManager.SENSOR_DELAY_NORMAL);
+        new CountDownTimer(3000, 1000) {
+            public void onTick(long millisUntilFinished) {
+                mainLayout.setVisibility(View.INVISIBLE);
+                pushUpCount.setText("Starting in: " + millisUntilFinished / 1000);
+            }
+
+            public void onFinish() {
+                mainLayout.setVisibility(View.VISIBLE);
+                pushUpCount.setText("Push-up Count: 0");
+                isTracking = true;
+                sensorManager.registerListener(PushActivity.this, proximitySensor, SensorManager.SENSOR_DELAY_NORMAL);
+            }
+        }.start();
     }
 
     public void stopTracking() {
@@ -61,7 +75,6 @@ public class PushActivity extends AppCompatActivity implements SensorEventListen
 
     private void vibrateDevice() {
         if (vibrator.hasVibrator()) {
-            // Vibrate for 500 milliseconds
             vibrator.vibrate(500);
         }
     }
@@ -76,25 +89,17 @@ public class PushActivity extends AppCompatActivity implements SensorEventListen
     }
 
     private void processProximityData(float proximityValue) {
-        if (!isCalibrated) {
-            calibrationDistance = proximityValue;
-            isCalibrated = true;
-            pushUpCount.setText("Push-up Count: 0");
-            calibrationText.setText("Calibration Complete");
-        } else {
-            float distanceThreshold = calibrationDistance - 2.0f;
-
-            if (proximityValue <= distanceThreshold) {
-                count++;
-                pushUpCount.setText("Push-up Count: " + count);
-                vibrateDevice();
-            }
+        float distanceThreshold = calibrationDistance - 2.0f;
+        if (proximityValue <= distanceThreshold) {
+            count++;
+            pushUpCount.setText("Push-up Count: " + count);
+            vibrateDevice();
         }
     }
 
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
-        // Not used in this context
+        // Not used
     }
 
     @Override
