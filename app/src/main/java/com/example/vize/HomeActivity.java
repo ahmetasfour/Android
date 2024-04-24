@@ -31,6 +31,11 @@ public class HomeActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    public void navigateToStrength(View view) {
+        Intent intent = new Intent(this, PushActivity.class);
+        startActivity(intent);
+    }
+
     public void playVideo(View view) {
         VideoView videoView = findViewById(R.id.videoView); // Make sure videoView is initialized
         FloatingActionButton fab = findViewById(R.id.fab_robot_tutorial); // Initialize FAB
