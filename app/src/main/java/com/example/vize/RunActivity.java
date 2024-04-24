@@ -99,18 +99,22 @@ protected void onCreate(Bundle savedInstanceState) {
         if (!running) {
             chronometer.setBase(SystemClock.elapsedRealtime() - pauseOffset);
             chronometer.start();
-            // Capture the start location
             if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+                startLocationUpdates();  // Start location updates when the chronometer starts
                 locationClient.getLastLocation()
                         .addOnSuccessListener(location -> {
                             if (location != null) {
                                 startLocation = location;
+                                lastLocation = location; // Initialize lastLocation with the starting point
                             }
                         });
+            } else {
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 101);
             }
             running = true;
         }
     }
+
 
     public void pauseChronometer(View view) {
         if (running) {
