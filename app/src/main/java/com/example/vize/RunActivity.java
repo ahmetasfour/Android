@@ -3,6 +3,7 @@ package com.example.vize;
 import static android.content.ContentValues.TAG;
 
 import android.Manifest;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
@@ -29,6 +30,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+import java.util.Map;
 
 
 public class RunActivity extends AppCompatActivity implements OnMapReadyCallback {
@@ -148,37 +150,36 @@ public class RunActivity extends AppCompatActivity implements OnMapReadyCallback
 
     private void updateDistanceDisplay() {
         distanceTextView.setText(String.format(Locale.getDefault(), "Distance: %.2f m", totalDistance));
-        // Log run to Firestore
+
+        // Get SharedPreferences Editor
+        SharedPreferences sharedPreferences = getSharedPreferences("RunHistory", MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+
+        // Store run data
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
         String date = dateFormat.format(new Date());
-        firestoreService.addDailyRun(date, totalDistance, task -> {
-            if (task.isSuccessful()) {
-                updateDailyRunsDisplay();
-            } else {
-                Log.e(TAG, "Error adding run to Firestore");
-            }
-        });
+        editor.putString(date, String.format(Locale.getDefault(), "%.2f m", totalDistance));
+        editor.apply();  // Commit changes
+
+        // Update UI with history
+        updateDailyRunsDisplay();
     }
 
     private void updateDailyRunsDisplay() {
-        firestoreService.fetchDailyRuns(task -> {
-            if (task.isSuccessful()) {
-                StringBuilder builder = new StringBuilder();
-                if (task.getResult() != null && !task.getResult().isEmpty()) {
-                    for (DocumentSnapshot document : task.getResult().getDocuments()) {
-                        String date = document.getString("date");
-                        Double distance = document.getDouble("distance");
-                        builder.append(String.format(Locale.getDefault(), "%s - %.2f m\n", date, distance));
-                    }
-                    dailyRunsText.setText(builder.toString());
-                } else {
-                    dailyRunsText.setText("No runs logged yet.");
-                }
-            } else {
-                dailyRunsText.setText("Failed to load runs.");
-            }
-        });
+        SharedPreferences sharedPreferences = getSharedPreferences("RunHistory", MODE_PRIVATE);
+        Map<String, ?> allEntries = sharedPreferences.getAll();
+        StringBuilder builder = new StringBuilder();
+        for (Map.Entry<String, ?> entry : allEntries.entrySet()) {
+            builder.append(entry.getKey()).append(" - ").append(entry.getValue()).append("\n");
+        }
+
+        if (builder.toString().isEmpty()) {
+            dailyRunsText.setText("No runs logged yet.");
+        } else {
+            dailyRunsText.setText(builder.toString());
+        }
     }
+
 
     @Override
     protected void onResume() {
