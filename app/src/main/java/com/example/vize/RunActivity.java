@@ -58,7 +58,7 @@ public class RunActivity extends AppCompatActivity implements OnMapReadyCallback
 
     private TextView dailyRunsText;
 
-    @Override
+/*    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_run);
@@ -73,7 +73,27 @@ public class RunActivity extends AppCompatActivity implements OnMapReadyCallback
         firestoreService = new FirestoreService();
         locationClient = LocationServices.getFusedLocationProviderClient(this);
         updateDailyRunsDisplay();
-    }
+    }*/
+@Override
+protected void onCreate(Bundle savedInstanceState) {
+    super.onCreate(savedInstanceState);
+    setContentView(R.layout.activity_run);
+
+    mapView = findViewById(R.id.mapView);
+    mapView.onCreate(savedInstanceState);
+    mapView.getMapAsync(this);
+
+    chronometer = findViewById(R.id.chronometer);
+    distanceTextView = findViewById(R.id.distanceTextView);
+    // Initialize dailyRunsText with the correct ID from your layout
+    dailyRunsText = findViewById(R.id.day1Distance);
+
+    firestoreService = new FirestoreService();
+    locationClient = LocationServices.getFusedLocationProviderClient(this);
+
+    // It's important to call updateDailyRunsDisplay after initializing dailyRunsText
+    updateDailyRunsDisplay();
+}
 
     public void startChronometer(View view) {
         if (!running) {
